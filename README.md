@@ -1,4 +1,4 @@
-# Skiing Game
+# [Skiing Game](https://saxten2011.github.io/Skiing-Game/)
 
 A game made in under an hour
 
