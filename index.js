@@ -24,16 +24,22 @@ class PathSegment {
         this.posY = 0;
         this.width = cWidth * pathWidthPercent;
 
-        this.show = () => {
+        this.show = (nextPath) => {
             let wrappedPos = this.posX;
-            wrappedPos = (wrappedPos < 0) ? cWidth + this.posX - this.width : wrappedPos;
-            wrappedPos = (wrappedPos > cWidth) ? wrappedPos - cWidth : wrappedPos
+            let path = this;
 
             this.posX = (this.posX + (pathWidthPercent * cWidth)) > cWidth ? maxPathOffset * cWidth : this.posX
             this.posX = (this.posX) < 0 ? 0 : this.posX
+            stroke(255)
+            strokeWeight(3)
+            line(this.posX, path.posY, nextPath.posX, nextPath.posY)
+            line(this.posX + path.width, path.posY, nextPath.posX + nextPath.width, nextPath.posY)
+            stroke(0)
+            strokeWeight(1)
 
-            ellipse(wrappedPos, this.posY, pathSegmentMarkerSize)
-            ellipse(wrappedPos + (this.width), this.posY, pathSegmentMarkerSize)
+            // ellipse(wrappedPos, this.posY, pathSegmentMarkerSize)
+            // ellipse(wrappedPos + (this.width), this.posY, pathSegmentMarkerSize)
+
 
         }
     }
@@ -108,6 +114,9 @@ document.addEventListener('touchend', function(evt){
         }else if(touch.screenX > window.innerWidth/2){
             rightDown = false;
         }
+        // ellipse(wrappedPos, this.posY, pathSegmentMarkerSize)
+        // ellipse(wrappedPos + (this.width), this.posY, pathSegmentMarkerSize)
+
     }
 })
 
@@ -116,12 +125,27 @@ let stepSize = 2;
 // document.body.innerHTML += innerWidth
 
 function draw() {
-    noStroke()
+    // noStroke()
     frameRate(200);
     if (!dead) {
         background(125)
-        for (path of paths) {
-            path.show();
+        // for (path of paths) {
+        //     path.show();
+        //     if (Math.abs(path.posY - player.y) < 5) {
+        //         if (path.posX > player.x || path.posX + path.width < player.x) {
+        //             dead = true;
+        //         }
+        //     }
+        //     path.posY += stepSize;
+        // }
+        
+
+        for (let i = 0; i < paths.length - 1; i++) {
+            // console.log(i)
+            let path = paths[i];
+            let nextPath = paths[i + 1];
+            // strokeWeight(5)
+            path.show(nextPath)
             if (Math.abs(path.posY - player.y) < 5) {
                 if (path.posX > player.x || path.posX + path.width < player.x) {
                     dead = true;
@@ -129,6 +153,8 @@ function draw() {
             }
             path.posY += stepSize;
         }
+
+
         if (leftDown) {
             player.x -= 5;
         } else if (rightDown) {
